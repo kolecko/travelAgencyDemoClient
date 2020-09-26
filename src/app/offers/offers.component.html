@@ -1,0 +1,18 @@
+<ngx-masonry [options]="{
+  gutter: 20,
+  originTop: true,
+  originLeft: true,
+  horizontalOrder: true
+}" class="wall">
+  <mat-card ngxMasonryItem class="pin" *ngFor="let offer of data">
+    <mat-card-header>
+      <mat-card-title>{{offer.title}}</mat-card-title>
+      <mat-card-subtitle>{{offer.price | currency : 'EUR'}} / osoba / noc</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image class="highlight-image" [src]="offer.img" alt="offer pic">
+    <mat-card-content><p>{{offer.description}}</p></mat-card-content>
+    <mat-card-actions class="actions">
+      <button mat-raised-button color="accent" (click)="openDialog(offer)">Overiť dostupnosť</button>
+    </mat-card-actions>
+  </mat-card>
+</ngx-masonry>

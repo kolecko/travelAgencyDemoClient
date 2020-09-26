@@ -1,0 +1,21 @@
+.wall {
+  width: 100%;
+  position: relative;
+}
+
+.pin {
+  box-sizing: border-box;
+  width: 32%;
+  margin: 10px 0;
+
+  .highlight-image {
+    background-size: cover;
+  }
+
+  .actions {
+    text-align: right;
+  }
+}
+
+
+

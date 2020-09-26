@@ -1,0 +1,114 @@
+<mat-horizontal-stepper linear #stepper>
+  <mat-step [stepControl]="calendarFormGroup" [editable]="calendarForm">
+    <form [formGroup]="calendarFormGroup">
+      <ng-template matStepLabel>Vyberte si termín</ng-template>
+
+      <h3 class="mat-h3">{{offer.title}}</h3>
+      <p class="mat-body-strong">{{ selectedRange.begin | date : 'longDate'}} - {{ selectedRange.end | date : 'longDate' }}</p>
+
+      <mat-form-field style="width: 100%; height: auto">
+        <input matInput type="text" [hidden]="true">
+
+        <sat-calendar
+          *ngIf="reservedDates"
+          [minDate]="availableRange.begin"
+          [maxDate]="availableRange.end"
+          [dateFilter]="isFreeFilter"
+          [rangeMode]="true"
+          (beginDateSelectedChange)="selectedDateChange($event)"
+          (dateRangesChange)="selectedRangeChange($event)"
+        >
+        </sat-calendar>
+      </mat-form-field>
+
+      <div style="margin: 2rem 0;">
+        <button mat-button mat-raised-button (click)="pushCalendarForm()" [disabled]="!calendarFormGroup.valid">Ďalej</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="loginFormGroup" [editable]="loginForm">
+    <form [formGroup]="loginFormGroup">
+      <ng-template matStepLabel>Prihláste sa</ng-template>
+
+      <h3 class="mat-h3">{{offer.title}}</h3>
+      <p class="mat-body-strong">{{ selectedRange.begin | date : 'longDate'}} - {{ selectedRange.end | date : 'longDate' }}</p>
+      <h4 class="matt-h4">Pre objednanie si ponuky sa musíte prihlásiť.</h4>
+      <div *ngIf="loginError" class="mat-accent">
+        Nesprávne prihlasovacie údaje.
+      </div>
+
+      <div>
+        <mat-form-field>
+          <mat-label>Team id:</mat-label>
+          <input matInput type="text" placeholder="XXX" formControlName="team">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <mat-label>Email:</mat-label>
+          <input matInput type="text" placeholder="jozko.mrkvicka@gmail.com" formControlName="email">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <mat-label>Heslo:</mat-label>
+          <input matInput type="password" placeholder="totalSecret" formControlName="password">
+        </mat-form-field>
+      </div>
+
+      <div style="margin: 2rem 0;">
+        <button mat-button mat-raised-button (click)="pushLoginForm()" [disabled]="!loginFormGroup.valid">Prihlásiť</button>
+      </div>
+
+      <p class="mat-body-2">Ak nemáte nemáte účet tak sa <a class="mat-tab-link" href="#">registrujte</a>.</p>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="reservationFormGroup" [editable]="reservationForm">
+    <form [formGroup]="reservationFormGroup">
+      <ng-template matStepLabel>Rezervácia</ng-template>
+
+      <h3 class="mat-h3">{{offer.title}}</h3>
+      <p class="mat-body-strong">Vybraný termín:</p>
+      <p class="mat-body-strong">{{ selectedRange.begin | date : 'longDate'}} - {{ selectedRange.end | date : 'longDate' }}</p>
+
+      <p>Vaše celé meno: {{user.name}} {{user.surname}}</p>
+      <mat-form-field>
+        <mat-label>Počet osôb:</mat-label>
+        <input matInput type="number" placeholder="1" [min]="0" [max]="offer.max_persons" formControlName="persons">
+      </mat-form-field>
+
+      <p>Celková suma {{reservation.price | currency : 'EUR'}} </p>
+
+      <button mat-button mat-raised-button (click)="pushReservationForm()" [disabled]="!reservationFormGroup.valid">Potvrdzujem a želám si zaplatiť</button>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="paymentFormGroup">
+    <form [formGroup]="paymentFormGroup">
+      <ng-template matStepLabel>Platba</ng-template>
+      <h3 class="mat-h3">{{offer.title}}</h3>
+      <p class="mat-body-strong">Vybraný termín:</p>
+      <p class="mat-body-strong">{{ selectedRange.begin | date : 'longDate' }} - {{ selectedRange.end | date : 'longDate' }}</p>
+      <p>Celková suma {{reservation.price | currency : 'EUR'}} </p>
+
+      <div>Vaša platba vyprší o {{formatMinutes(counter) + 'min.'}}</div>
+
+      <h4>Fake Pay by name</h4>
+      <mat-form-field>
+        <mat-label>Meno držiteľa karty:</mat-label>
+        <input matInput type="text" placeholder="Wu Han" formControlName="card_holder">
+      </mat-form-field>
+
+      <h4>Platíte za objednávku číslo {{reservation.id}}</h4>
+
+      <h4 class="mat-accent" *ngIf="payment.number">Vašu platbu evidujeme pod číslom: {{payment.number}}</h4>
+
+      <span style="margin: 2rem;"><button mat-button mat-raised-button color="primary" (click)="pushPaymentForm()" [disabled]="!paymentFormGroup.valid || !paymentForm">Zaplatiť</button></span>
+      <span style="margin: 2rem;"><button mat-button mat-raised-button color="warn" (click)="closeDialog()">Zavrieť</button></span>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>
